@@ -1,5 +1,5 @@
 steps:
-  # Install dependencies
+  # Step 0: Install dependencies
   - name: python
     entrypoint: pip
     args: ["install", "-r", "app/requirements.txt", "--user"]
@@ -14,19 +14,19 @@ steps:
   #   entrypoint: python
   #   args: ["-m", "pytest", "--junitxml=${SHORT_SHA}_test_log.xml"]
 
-  # Docker Build Container Image
+  # Step 1: Docker Build Container Image
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
-        # "-t",
-        # "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
         "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
+        "-t",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:latest",
         "./app",
       ]
 
-  # Docker push to Google Artifact Registry
+  # Step 2: Docker push to Google Artifact Registry
   - name: "gcr.io/cloud-builders/docker"
     args:
       [
@@ -34,7 +34,7 @@ steps:
         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython",
       ]
 
-  # Deploy to Cloud Run
+  # Step 3: Deploy to Cloud Run
   - name: google/cloud-sdk
     args:
       [
