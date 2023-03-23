@@ -22,7 +22,7 @@ steps:
         # "-t",
         # "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
         "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$COMMIT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
         "./app",
       ]
 
@@ -31,7 +31,7 @@ steps:
     args:
       [
         "push",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$COMMIT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython",
       ]
 
   # Deploy to Cloud Run
@@ -41,7 +41,7 @@ steps:
         "gcloud",
         "run",
         "deploy",
-        "hellopython-$SHORT_SHA",
+        "hellopython",
         "--project",
         "${_PROJECT_NAME}",
         "--platform",
@@ -49,7 +49,7 @@ steps:
         "--region",
         "${_GCP_REGION}",
         "--image",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
         "--port",
         "8080",
         "--allow-unauthenticated",
