@@ -47,8 +47,8 @@ steps:
         "${_GCP_REGION}",
         "--image",
         "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
-        "--port",
-        "8080",
+        # "--port",
+        # "8080",
         "--allow-unauthenticated",
       ]
 # # Save test logs to Google Cloud Storage
