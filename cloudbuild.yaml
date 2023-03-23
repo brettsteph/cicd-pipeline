@@ -8,6 +8,10 @@ steps:
       - "LOCATION=$LOCATION"
       - "PROJECT_ID=$PROJECT_ID"
       - "TAG_NAME=latest"
+      - "IMAGE=hellopython"
+      - "REPO=${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${IMAGE}:"
+      - "TAG=$REPO$SHORT_HASH"
+      - "LATEST=${REPO}latest"
 
   # # Run unit tests
   # - name: python
@@ -19,10 +23,8 @@ steps:
     args:
       [
         "build",
-        "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
-        "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+        "-t ${TAG}",
+        "-t ${LATEST}",
         "./app",
       ]
 
@@ -31,7 +33,9 @@ steps:
     args:
       [
         "push",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython",
+        "${TAG}",
+        "push",
+        "${LATEST}",
       ]
 
   # Step 3: Deploy to Cloud Run
@@ -41,7 +45,7 @@ steps:
         "gcloud",
         "run",
         "deploy",
-        "hellopython",
+        "${IMAGE}",
         "--project",
         "${_PROJECT_NAME}",
         "--platform",
@@ -49,7 +53,7 @@ steps:
         "--region",
         "${_GCP_REGION}",
         "--image",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+        "${LATEST}",
         "--port",
         "8080",
         "--allow-unauthenticated",
