@@ -8,11 +8,12 @@ steps:
       - "LOCATION=$LOCATION"
       - "PROJECT_ID=$PROJECT_ID"
       - "TAG_NAME=latest"
+      - "SHORT_SHA=$SHORT_SHA"
 
   # Run unit tests
   - name: python
     entrypoint: python
-    args: ["-m", "pytest", "--junitxml=$SHORT_SHA_test_log.xml"]
+    args: ["-m", "pytest", "--junitxml=${SHORT_SHA}_test_log.xml"]
 
   # Docker Build
   - name: "gcr.io/cloud-builders/docker"
@@ -20,7 +21,7 @@ steps:
       [
         "build",
         "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
         "-t",
         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
         "app/ .",
@@ -60,7 +61,7 @@ artifacts:
   objects:
     location: gs://build-test-logs-bs
     paths:
-      - "$SHORT_SHA_test_log.xml"
+      - "${SHORT_SHA}_test_log.xml"
 # # Store images in Google Artifact Registry
 # images:
 #   - ${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}
