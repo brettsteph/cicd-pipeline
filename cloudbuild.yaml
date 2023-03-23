@@ -34,26 +34,26 @@ steps:
         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$COMMIT_SHA",
       ]
 
-#   # Deploy to Cloud Run
-#   - name: google/cloud-sdk
-#     args:
-#       [
-#         "gcloud",
-#         "run",
-#         "deploy",
-#         "hellopython:${TAG_NAME}",
-#         "--project",
-#         "${_PROJECT_NAME}",
-#         "--platform",
-#         "managed",
-#         "--region",
-#         "${_GCP_REGION}",
-#         "--image",
-#         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython",
-#         "--port",
-#         "8080",
-#         "--allow-unauthenticated",
-#       ]
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args:
+      [
+        "gcloud",
+        "run",
+        "deploy",
+        "hellopython:$COMMIT_SHA",
+        "--project",
+        "${_PROJECT_NAME}",
+        "--platform",
+        "managed",
+        "--region",
+        "${_GCP_REGION}",
+        "--image",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython",
+        "--port",
+        "8080",
+        "--allow-unauthenticated",
+      ]
 
 # # Save test logs to Google Cloud Storage
 # artifacts:
