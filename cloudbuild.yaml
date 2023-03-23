@@ -12,7 +12,7 @@ steps:
   # Run unit tests
   - name: python
     entrypoint: python
-    args: ["-m", "pytest", "--junitxml=${SHORT_SHA}_test_log.xml"]
+    args: ["-m", "pytest", "--junitxml=$SHORT_SHA_test_log.xml"]
 
   # Docker Build
   - name: "gcr.io/cloud-builders/docker"
