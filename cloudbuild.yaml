@@ -41,7 +41,7 @@ steps:
         "gcloud",
         "run",
         "deploy",
-        "hellopython:$SHORT_SHA",
+        "hellopython-$SHORT_SHA",
         "--project",
         "${_PROJECT_NAME}",
         "--platform",
