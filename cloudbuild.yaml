@@ -19,11 +19,8 @@ steps:
     args:
       [
         "build",
-        "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
-        "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
-        "./app",
+        "-t ${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+        " ${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA ./app",
       ]
 
   # Step 2: Docker push to Google Artifact Registry
@@ -31,9 +28,7 @@ steps:
     args:
       [
         "push",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
-        "push",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA"
       ]
 
   # Step 3: Deploy to Cloud Run
@@ -56,7 +51,6 @@ steps:
         "8080",
         "--allow-unauthenticated",
       ]
-
 # # Save test logs to Google Cloud Storage
 # artifacts:
 #   objects:
