@@ -15,53 +15,53 @@ steps:
     entrypoint: python
     args: ["-m", "pytest", "--junitxml=${SHORT_SHA}_test_log.xml"]
 
-  # Docker Build
-  - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "build",
-        "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
-        "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
-        "app/ .",
-      ]
+#   # Docker Build
+#   - name: "gcr.io/cloud-builders/docker"
+#     args:
+#       [
+#         "build",
+#         "-t",
+#         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
+#         "-t",
+#         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+#         "app/ .",
+#       ]
 
-  # Docker push to Google Artifact Registry
-  - name: "gcr.io/cloud-builders/docker"
-    args:
-      [
-        "push",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
-      ]
+#   # Docker push to Google Artifact Registry
+#   - name: "gcr.io/cloud-builders/docker"
+#     args:
+#       [
+#         "push",
+#         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+#       ]
 
-  # Deploy to Cloud Run
-  - name: google/cloud-sdk
-    args:
-      [
-        "gcloud",
-        "run",
-        "deploy",
-        "hellopython:${TAG_NAME}",
-        "--project",
-        "${_PROJECT_NAME}",
-        "--platform",
-        "managed",
-        "--region",
-        "${_GCP_REGION}",
-        "--image",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
-        "--port",
-        "8080",
-        "--allow-unauthenticated",
-      ]
+#   # Deploy to Cloud Run
+#   - name: google/cloud-sdk
+#     args:
+#       [
+#         "gcloud",
+#         "run",
+#         "deploy",
+#         "hellopython:${TAG_NAME}",
+#         "--project",
+#         "${_PROJECT_NAME}",
+#         "--platform",
+#         "managed",
+#         "--region",
+#         "${_GCP_REGION}",
+#         "--image",
+#         "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
+#         "--port",
+#         "8080",
+#         "--allow-unauthenticated",
+#       ]
 
-# Save test logs to Google Cloud Storage
-artifacts:
-  objects:
-    location: gs://build-test-logs-bs
-    paths:
-      - "${SHORT_SHA}_test_log.xml"
+# # Save test logs to Google Cloud Storage
+# artifacts:
+#   objects:
+#     location: gs://build-test-logs-bs
+#     paths:
+#       - "${SHORT_SHA}_test_log.xml"
 # # Store images in Google Artifact Registry
 # images:
 #   - ${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}
