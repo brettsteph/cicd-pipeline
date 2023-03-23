@@ -36,7 +36,7 @@ variable "bucket_name" {
 }
 
 variable "github_repository" {
-  type    = string
+  type = string
 }
 
 variable "github_owner" {

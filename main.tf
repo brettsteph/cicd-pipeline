@@ -15,6 +15,7 @@ provider "google" {
 }
 
 locals {
+  image_name = var.image_name
   services = [
     # "sourcerepo.googleapis.com",
     # "cloudbuild.googleapis.com", //Done manually to setup GitHub
@@ -39,15 +40,23 @@ resource "google_project_service" "enabled_service" {
   }
 }
 
+
 # Create Service Account
-resource "google_service_account" "cloudbuild_service_account" {
-  account_id = "${var.namespace}-service-account"
+resource "google_service_account" "cloudbuild_sa" {
+  account_id   = "${var.namespace}-service-account"
+  display_name = "A service account a User can use"
 }
 
-# resource "google_service_account_key" "mykey" {
-#   service_account_id = google_service_account.cloudbuild_service_account.name
-#   public_key_type    = "TYPE_X509_PEM_FILE"
+# # Ensure Cloud Build has sufficient rights to use Cloud Run
+# resource "google_project_iam_member" "cloudbuild_run_iam" {
+#   # depends_on = [google_cloudbuild_trigger.cicd_trigger]
+#   # for_each = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
+#   project = var.project_id
+#   # role     = each.key
+#   role   = "roles/run.admin"
+#   member = "serviceAccount:${google_service_account.cloudbuild_sa.email}"
 # }
+
 
 #  ------ PIPELINE ------  #
 # Manually setup GitHub as my repo in Codebuild
@@ -87,17 +96,6 @@ resource "google_cloudbuild_trigger" "cicd_trigger" {
   filename = "cloudbuild.yaml"
 }
 
-# Ensure Cloud Build has sufficient rights to use Cloud Run
-resource "google_project_iam_member" "cloudbuild_run_iam" {
-  # depends_on = [google_cloudbuild_trigger.cicd_trigger]
-  # for_each = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
-  project = var.project_id
-  # role     = each.key
-  role   = "roles/run.admin"
-  member = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
-}
-
-
 
 # # Create a Cloud Run service that deploys the container image
 # resource "google_cloud_run_service" "cicd_service" {
@@ -109,14 +107,24 @@ resource "google_project_iam_member" "cloudbuild_run_iam" {
 #   template {
 #     spec {
 #       containers {
-#         # image = "gcr.io/${var.project_id}/${var.image_name}:${var.image_tag}" //TODO
-#         image = "us-docker.pkg.dev/cloudrun/container/hello"
+#         image = local.image_name
+#         # image = "us-docker.pkg.dev/cloudrun/container/hello"
 #         ports {
 #           container_port = 8080
 #         }
 #       }
 #     }
 #   }
+  
+# }
+
+
+# # Give all users the ability to invoke the service
+# resource "google_cloud_run_service_iam_member" "allUsers" {
+#   service  = google_cloud_run_service.cicd_service.name
+#   location = google_cloud_run_service.cicd_service.location
+#   role     = "roles/run.invoker"
+#   member   = "allUsers"
 # }
 
 # # Enable user access to the web service after the pipeline deploys
