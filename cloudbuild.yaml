@@ -60,7 +60,7 @@ artifacts:
   objects:
     location: gs://build-test-logs-bs
     paths:
-      - $SHORT_SHA_test_log.xml
+      - "$SHORT_SHA_test_log.xml"
 # # Store images in Google Artifact Registry
 # images:
 #   - ${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}
