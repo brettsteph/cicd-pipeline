@@ -20,9 +20,9 @@ steps:
       [
         "build",
         "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${SHORT_SHA}",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
         "-t",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:latest",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
         "./app",
       ]
 
@@ -49,7 +49,7 @@ steps:
         "--region",
         "${_GCP_REGION}",
         "--image",
-        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}",
         "--port",
         "8080",
         "--allow-unauthenticated",
