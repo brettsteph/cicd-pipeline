@@ -7,9 +7,7 @@ steps:
       - "BUILD=$BUILD_ID"
       - "LOCATION=$LOCATION"
       - "PROJECT_ID=$PROJECT_ID"
-      - "TAG_NAME=latest"
-      - "IMAGE=hellopython"
-      - "REPO=${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/${IMAGE}:"
+      - "REPO=${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:"
       - "TAG=$REPO$SHORT_HASH"
       - "LATEST=${REPO}latest"
 
@@ -45,7 +43,7 @@ steps:
         "gcloud",
         "run",
         "deploy",
-        "${IMAGE}",
+        "hellopython",
         "--project",
         "${_PROJECT_NAME}",
         "--platform",
