@@ -90,12 +90,11 @@ resource "google_cloudbuild_trigger" "cicd_trigger" {
 # Ensure Cloud Build has sufficient rights to use Cloud Run
 resource "google_project_iam_member" "cloudbuild_run_iam" {
   # depends_on = [google_cloudbuild_trigger.cicd_trigger]
-  for_each = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
-  project  = var.project_id
-  role     = each.key
-  member   = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
-
-
+  # for_each = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
+  project = var.project_id
+  # role     = each.key
+  role   = "roles/run.admin"
+  member = "serviceAccount:${google_service_account.cloudbuild_service_account.email}"
 }
 
 
