@@ -8,7 +8,7 @@ steps:
       - "LOCATION=$LOCATION"
       - "PROJECT_ID=$PROJECT_ID"
       - "REPO=${_ARTIFACT_REGISTRY_URL}/${PROJECT_ID}/${_ARTIFACT_REGISTRY_REPO}/hellopython:"
-      - "TAG=$REPO$SHORT_HASH"
+      - "TAG=${REPO}$SHORT_HASH"
       - "LATEST=${REPO}latest"
 
   # # Run unit tests
