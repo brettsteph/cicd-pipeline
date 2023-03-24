@@ -1,5 +1,3 @@
-# output "urls" {
-#   value = {
-#     app  = google_cloud_run_service.cicd_service.status[0].url
-#   }
-# }
+output "service_account_emails" {
+  value = google_project_service_identity.cicd_si.email
+}
