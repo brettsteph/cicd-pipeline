@@ -19,7 +19,7 @@ steps:
       [
         "build",
         "-t",
-        "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/${_DOCKER_IMAGE_IMAGE}:$SHORT_SHA",
         "./app",
       ]
 
@@ -28,7 +28,7 @@ steps:
     args:
       [
         "push",
-        "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/${_DOCKER_IMAGE_IMAGE}:$SHORT_SHA",
       ]
 
   # Step 3: Deploy to Cloud Run
@@ -38,7 +38,7 @@ steps:
         "gcloud",
         "run",
         "deploy",
-        "hellopython",
+        "${_DOCKER_IMAGE_IMAGE}",
         "--project",
         "${_PROJECT_NAME}",
         "--platform",
@@ -46,7 +46,7 @@ steps:
         "--region",
         "${_GCP_REGION}",
         "--image",
-        "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/hellopython:$SHORT_SHA",
+        "${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/${_DOCKER_IMAGE_IMAGE}:$SHORT_SHA",
         "--port",
         "5000",
         "--allow-unauthenticated",
