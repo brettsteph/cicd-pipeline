@@ -58,5 +58,3 @@ steps:
 #     paths:
 #       - "${SHORT_SHA}_test_log.xml"
 # # Store images in Google Artifact Registry
-# images:
-#   - ${_ARTIFACT_REGISTRY_URL}/$PROJECT_ID/${_ARTIFACT_REGISTRY_REPO}/hellopython:${TAG_NAME}
