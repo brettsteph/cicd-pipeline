@@ -17,14 +17,15 @@ provider "google" {
 locals {
   image_name = var.image_name
   services = [
-    # "sourcerepo.googleapis.com",
-    # "cloudbuild.googleapis.com", //Done manually to setup GitHub
+    "cloudbuild.googleapis.com",
+    "compute.googleapis.com",
     "run.googleapis.com",
     "iam.googleapis.com",
     "artifactregistry.googleapis.com"
   ]
 }
 
+# Allows management of a single API service for a Google Cloud Platform project.
 # Dynamically enable project services
 resource "google_project_service" "enabled_service" {
   for_each           = toset(local.services)
@@ -40,26 +41,34 @@ resource "google_project_service" "enabled_service" {
   }
 }
 
-
-# Create Service Account
-resource "google_service_account" "cloudbuild_sa" {
-  account_id   = "${var.namespace}-service-account"
-  display_name = "A service account a User can use"
+# Retrieve default service account for this project in order to enable compute api
+data "google_compute_default_service_account" "default" {
+  project = var.project_id
+  depends_on = [
+    google_project_service.enabled_service
+  ]
 }
 
-# # Ensure Cloud Build has sufficient rights to use Cloud Run
-# resource "google_project_iam_member" "cloudbuild_run_iam" {
-#   # depends_on = [google_cloudbuild_trigger.cicd_trigger]
-#   # for_each = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
-#   project = var.project_id
-#   # role     = each.key
-#   role   = "roles/run.admin"
-#   member = "serviceAccount:${google_service_account.cloudbuild_sa.email}"
-# }
+# Used to retrieve email from Google-managed service account CloudBuild
+resource "google_project_service_identity" "cicd_si" {
+  provider = google-beta
+
+  project = var.project_id
+  service = "cloudbuild.googleapis.com"
+}
+
+# Ensure Cloud Build has sufficient rights to use Cloud Run
+# Assign Cloud Build service account email as a member
+resource "google_project_iam_member" "cloudbuild_run_iam" {
+  for_each = toset(["roles/run.admin", "roles/iam.serviceAccountUser"])
+  project  = var.project_id
+  role     = each.key
+  member   = "serviceAccount:${google_project_service_identity.cicd_si.email}"
+}
 
 
-#  ------ PIPELINE ------  #
-# Manually setup GitHub as my repo in Codebuild
+#  ------ PIPELINE TRIGGER------  #
+# Manually setup GitHub as my repo in Cloudbuild
 
 
 # Create Artifact Registry for Docker images
@@ -95,51 +104,3 @@ resource "google_cloudbuild_trigger" "cicd_trigger" {
 
   filename = "cloudbuild.yaml"
 }
-
-
-# # Create a Cloud Run service that deploys the container image
-# resource "google_cloud_run_service" "cicd_service" {
-#   depends_on = [
-#     google_project_service.enabled_service["run.googleapis.com"]
-#   ]
-#   name     = var.namespace
-#   location = var.gcp_region
-#   template {
-#     spec {
-#       containers {
-#         image = local.image_name
-#         # image = "us-docker.pkg.dev/cloudrun/container/hello"
-#         ports {
-#           container_port = 8080
-#         }
-#       }
-#     }
-#   }
-  
-# }
-
-
-# # Give all users the ability to invoke the service
-# resource "google_cloud_run_service_iam_member" "allUsers" {
-#   service  = google_cloud_run_service.cicd_service.name
-#   location = google_cloud_run_service.cicd_service.location
-#   role     = "roles/run.invoker"
-#   member   = "allUsers"
-# }
-
-# # Enable user access to the web service after the pipeline deploys
-# # Grants all users the run.invoker role and attach to the Cloud Run service
-# data "google_iam_policy" "admin" {
-#   binding {
-#     role = "roles/run.invoker"
-#     members = [
-#       "allUsers",
-#     ]
-#   }
-# }
-# resource "google_cloud_run_service_iam_policy" "policy" {
-#   location    = var.gcp_region
-#   project     = var.project_id
-#   service     = google_cloud_run_service.cicd_service.name
-#   policy_data = data.google_iam_policy.admin.policy_data
-# }
