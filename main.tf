@@ -11,11 +11,9 @@ provider "google" {
   credentials = file("~/.config/gcloud/application_default_credentials.json")
   project     = var.project_id
   region      = var.gcp_region
-  zone        = var.gcp_zone
 }
 
 locals {
-  image_name = var.image_name
   services = [
     "cloudbuild.googleapis.com",
     "compute.googleapis.com",
@@ -41,13 +39,13 @@ resource "google_project_service" "enabled_service" {
   }
 }
 
-# Retrieve default service account for this project in order to enable compute api
-data "google_compute_default_service_account" "default" {
-  project = var.project_id
-  depends_on = [
-    google_project_service.enabled_service
-  ]
-}
+# # Retrieve default service account for this project in order to enable compute api
+# data "google_compute_default_service_account" "default" {
+#   project = var.project_id
+#   depends_on = [
+#     google_project_service.enabled_service
+#   ]
+# }
 
 # Used to retrieve email from Google-managed service account CloudBuild
 resource "google_project_service_identity" "cicd_si" {
@@ -100,6 +98,7 @@ resource "google_cloudbuild_trigger" "cicd_trigger" {
     _ARTIFACT_REGISTRY_URL  = "${var.gcp_region}-docker.pkg.dev"
     _GCP_REGION             = var.gcp_region
     _PROJECT_NAME           = var.project_id
+    _DOCKER_IMAGE_IMAGE     = var.docker_image_name
   }
 
   filename = "cloudbuild.yaml"
