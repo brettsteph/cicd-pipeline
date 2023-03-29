@@ -39,7 +39,7 @@ The block starting with `resource google_artifact_registry_repository` creates a
 ![resource google_artifact_registry_repository](https://user-images.githubusercontent.com/3052677/228671316-f78f6235-68d7-4f94-a494-71ae7101cf93.png)
 
 
-The last block is used to create a Cloud Build trigger named "hello-python" using the `google_cloudbuild_trigger` resource type. The trigger responds to changes pushed to a specific GitHub repository specified by variables such as github_repository, github_owner, and github_branch. When triggered, this trigger automatically follows the steps specified in a cloudbuild.yaml file to build a Docker container and deploy the application to Cloud Run. The `substitutions` block allows inputs to be passed into the cloud build job as environment variables.
+The last block `google_cloudbuild_trigger` resource type is used to create a Cloud Build trigger. The trigger responds to changes pushed to a specific GitHub repository specified by variables such as github_repository, github_owner, and github_branch. When triggered, this trigger automatically follows the steps specified in a cloudbuild.yaml file to build a Docker container and deploy the application to Cloud Run. The `substitutions` block allows inputs to be passed into the cloud build job as environment variables.
 
 ![resource google_cloudbuild_trigger](https://user-images.githubusercontent.com/3052677/228671476-d8378791-8bfb-44a4-888a-2acae55a1eac.png)
 
