@@ -57,4 +57,3 @@ steps:
 #     location: gs://build-test-logs-bs
 #     paths:
 #       - "${SHORT_SHA}_test_log.xml"
-# # Store images in Google Artifact Registry
