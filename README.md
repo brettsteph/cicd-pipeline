@@ -4,6 +4,9 @@ This configuration is written in Terraform language and is used to automate the 
 
 The code block starting with `terraform` specifies the required provider for GCP. In this case, it's the Google provider from HashiCorp that needs to be installed in Terraform.
 
+![Terraform Provider](https://user-images.githubusercontent.com/3052677/228669725-96a8a418-4ca1-4a2e-8678-67841743e68e.png)
+
+
 The next block starting with `provider` specifies the configuration settings for the `google` provider. It sets the credentials file path for GCP, `project_id`, and `region`.
 
 The block starting with `locals` defines an array of API services that we want to enable dynamically later in the code.
