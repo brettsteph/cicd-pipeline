@@ -1,4 +1,4 @@
-# CICD Pipleline with GCP Cloud Build, Terraform AND GitHub
+# CICD Pipeline with GCP Cloud Build, Terraform AND GitHub
 
 This configuration is written in Terraform language and is used to automate the setup of cloud resources on Google Cloud Platform (GCP). 
 
