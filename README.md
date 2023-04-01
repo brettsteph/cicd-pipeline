@@ -1,5 +1,7 @@
 # CICD Pipeline with GCP Cloud Build, Terraform AND GitHub
 
+![GCP CICD](https://user-images.githubusercontent.com/3052677/229312734-565acb47-12b4-4db0-9fe4-90a990eb0d03.png)
+
 This configuration is written in Terraform language and is used to automate the setup of cloud resources on Google Cloud Platform (GCP). 
 
 The code block starting with `terraform` specifies the required provider for GCP. In this case, it's the Google provider from HashiCorp that needs to be installed in Terraform.
